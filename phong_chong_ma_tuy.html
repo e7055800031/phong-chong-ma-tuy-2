@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ĐỪNG THỬ - ĐỪNG ĐỂ MA TÚY QUYẾT ĐỊNH TƯƠNG LAI</title>
+<style>
+:root{
+  --bg:#07111f; --panel:rgba(12,27,48,.78); --text:#f4f8ff; --muted:#a9bad1;
+  --cyan:#39d8ff; --blue:#5b7cff; --red:#ff5470; --green:#5ee6a8; --yellow:#ffd76a;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--text)}
+body{user-select:none}
+#bg{position:fixed;inset:0;overflow:hidden;background:
+ radial-gradient(circle at 15% 15%,rgba(57,216,255,.12),transparent 28%),
+ radial-gradient(circle at 85% 80%,rgba(91,124,255,.15),transparent 32%),
+ linear-gradient(135deg,#050b14,#0a1628 55%,#07101d)}
+.blob{position:absolute;border-radius:50%;filter:blur(45px);opacity:.18;animation:float 12s ease-in-out infinite alternate}
+.b1{width:32vw;height:32vw;background:#39d8ff;left:-12vw;top:15vh}.b2{width:28vw;height:28vw;background:#7b61ff;right:-8vw;bottom:-8vw;animation-delay:-4s}
+@keyframes float{to{transform:translate(5vw,-4vh) scale(1.12)}}
+#stars{position:absolute;inset:0;opacity:.45}
+.star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:twinkle 3s infinite}
+@keyframes twinkle{50%{opacity:.15;transform:scale(.6)}}
+#app{position:relative;width:100%;height:100%}
+.topbar{position:fixed;z-index:20;left:0;right:0;top:0;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 34px;background:linear-gradient(180deg,rgba(4,10,18,.78),rgba(4,10,18,0));backdrop-filter:blur(8px)}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:.08em;font-size:13px}
+.brandMark{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,var(--cyan),var(--blue));box-shadow:0 8px 30px rgba(57,216,255,.25)}
+.brandMark span{font-size:18px}
+.counter{font-size:13px;color:var(--muted);font-weight:700}
+.progress{position:fixed;z-index:30;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--cyan),var(--blue),var(--red));box-shadow:0 0 18px var(--cyan);transition:width .5s ease}
+
+.slides{position:relative;width:100%;height:100%}
+.slide{position:absolute;inset:0;padding:90px 7vw 75px;display:grid;place-items:center;opacity:0;visibility:hidden;transform:scale(.97) translateY(16px);transition:opacity .65s ease,transform .75s cubic-bezier(.2,.8,.2,1),visibility .65s}
+.slide.active{opacity:1;visibility:visible;transform:none}
+/* ===== MICRO MOTION: chuyển động các thành phần ===== */
+.slide.active .kicker{animation:riseIn .65s both .08s}
+.slide.active h1,.slide.active h2{animation:riseIn .75s cubic-bezier(.2,.8,.2,1) both .16s}
+.slide.active .lead,.slide.active > .content > p{animation:riseIn .7s both .25s}
+.slide.active .card,.slide.active .stat,.slide.active .step,.slide.active .item,.slide.active .chat{
+  animation:cardIn .7s cubic-bezier(.2,.8,.2,1) both;
+}
+.slide.active .card:nth-child(1),.slide.active .stat:nth-child(1),.slide.active .step:nth-child(1),.slide.active .item:nth-child(1){animation-delay:.22s}
+.slide.active .card:nth-child(2),.slide.active .stat:nth-child(2),.slide.active .step:nth-child(2),.slide.active .item:nth-child(2){animation-delay:.31s}
+.slide.active .card:nth-child(3),.slide.active .stat:nth-child(3),.slide.active .step:nth-child(3),.slide.active .item:nth-child(3){animation-delay:.40s}
+.slide.active .card:nth-child(4),.slide.active .step:nth-child(4),.slide.active .item:nth-child(4){animation-delay:.49s}
+.slide.active .step:nth-child(5){animation-delay:.58s}
+.slide.active .quote{animation:fadeUp .8s both .58s}
+@keyframes riseIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes cardIn{from{opacity:0;transform:translateY(28px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes floatCard{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.slide.active .infoFloat{animation:floatCard 4s ease-in-out infinite}
+.typeCard{position:relative;overflow:hidden}
+.typeCard:before{content:"";position:absolute;inset:-80px auto auto -40px;width:150px;height:150px;border-radius:50%;background:rgba(57,216,255,.09);filter:blur(15px);animation:orb 5s ease-in-out infinite alternate}
+@keyframes orb{to{transform:translate(360px,170px) scale(1.5);opacity:.02}}
+.miniTag{display:inline-block;margin:5px 4px 0 0;padding:5px 8px;border-radius:999px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08);color:#c9d8e9;font-size:10px;font-weight:700}
+
+.content{width:min(1180px,100%);max-height:100%;position:relative}
+.kicker{display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border:1px solid rgba(57,216,255,.25);background:rgba(57,216,255,.07);border-radius:999px;color:var(--cyan);font-weight:800;font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+.kicker i{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 14px var(--cyan)}
+h1{font-size:clamp(44px,7.5vw,100px);line-height:.94;margin:20px 0 18px;letter-spacing:-.055em}
+h2{font-size:clamp(34px,5vw,62px);line-height:1;margin:12px 0 18px;letter-spacing:-.04em}
+h3{font-size:21px;margin:0 0 9px}
+p{color:var(--muted);font-size:clamp(15px,1.6vw,19px);line-height:1.65;margin:0}
+.gradient{background:linear-gradient(100deg,#fff 15%,#73e5ff 52%,#7d8cff 85%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.red{color:var(--red)}.green{color:var(--green)}.yellow{color:var(--yellow)}
+.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:5vw;align-items:center}
+.heroText .lead{max-width:720px}
+.heroVisual{height:430px;display:grid;place-items:center;position:relative}
+.ring{width:min(34vw,380px);aspect-ratio:1;border-radius:50%;border:1px solid rgba(57,216,255,.3);position:relative;animation:spin 20s linear infinite}
+.ring:before,.ring:after{content:"";position:absolute;inset:12%;border:1px solid rgba(91,124,255,.25);border-radius:50%}
+.ring:after{inset:25%;border-color:rgba(255,84,112,.3)}
+.core{position:absolute;inset:35%;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#ff6a7f 0,#d9254b 45%,#681326 100%);box-shadow:0 0 70px rgba(255,84,112,.45);animation:pulse 2.5s infinite}
+.core span{font-size:58px}
+.orbit{position:absolute;width:12px;height:12px;border-radius:50%;background:var(--cyan);box-shadow:0 0 20px var(--cyan);left:50%;top:-6px;transform-origin:0 196px}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes pulse{50%{transform:scale(1.08);box-shadow:0 0 95px rgba(255,84,112,.65)}}
+.quote{margin-top:28px;padding-left:18px;border-left:3px solid var(--cyan);font-size:16px;color:#dce8f7;font-weight:650}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+.card{background:linear-gradient(145deg,rgba(19,38,65,.8),rgba(9,20,35,.72));border:1px solid rgba(255,255,255,.09);border-radius:22px;padding:25px;box-shadow:0 20px 60px rgba(0,0,0,.18);backdrop-filter:blur(14px);transition:transform .3s,border-color .3s}
+.card:hover{transform:translateY(-5px);border-color:rgba(57,216,255,.35)}
+.icon{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:23px;margin-bottom:18px;background:rgba(57,216,255,.1);border:1px solid rgba(57,216,255,.18)}
+.card p{font-size:14px;line-height:1.55}
+
+.bigNumber{font-size:clamp(58px,9vw,112px);font-weight:900;letter-spacing:-.07em;line-height:.9}
+.statRow{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:35px}
+.stat{padding:26px;border-radius:22px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08)}
+.stat strong{display:block;font-size:20px;margin:12px 0 7px}.stat small{color:var(--muted);font-size:13px;line-height:1.5;display:block}
+
+.path{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:35px}
+.step{position:relative;padding:20px 15px;border-radius:18px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08);min-height:150px}
+.step b{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:rgba(57,216,255,.12);color:var(--cyan);margin-bottom:13px}
+.step strong{font-size:15px}.step p{font-size:12px;margin-top:7px;line-height:1.45}
+.arrow{position:absolute;right:-11px;top:48px;color:var(--cyan);z-index:2;font-size:22px}
+
+.warning{display:grid;grid-template-columns:.9fr 1.1fr;gap:30px;align-items:center}
+.warningBox{padding:35px;border-radius:28px;border:1px solid rgba(255,84,112,.25);background:linear-gradient(145deg,rgba(255,84,112,.1),rgba(255,255,255,.025));box-shadow:0 25px 70px rgba(255,40,80,.08)}
+.warningBox .emoji{font-size:76px;filter:drop-shadow(0 10px 20px rgba(255,84,112,.25))}
+.list{display:grid;gap:12px;margin-top:24px}.item{display:flex;gap:13px;align-items:flex-start;padding:15px 16px;border-radius:16px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.07)}
+.item .dot{flex:none;width:9px;height:9px;border-radius:50%;margin-top:7px;background:var(--cyan);box-shadow:0 0 13px var(--cyan)}
+.item strong{font-size:15px}.item span{display:block;color:var(--muted);font-size:13px;line-height:1.5;margin-top:3px}
+
+.scenario{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:28px}
+.chat{padding:25px;border-radius:24px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08)}
+.msg{padding:14px 16px;border-radius:17px;margin:10px 0;max-width:85%;font-size:14px;line-height:1.5}
+.msg.friend{background:#172a46;margin-right:auto}.msg.you{background:linear-gradient(135deg,rgba(57,216,255,.2),rgba(91,124,255,.16));margin-left:auto}
+.choice{display:grid;gap:10px;margin-top:15px}.choice button{font:inherit;text-align:left;color:#eaf4ff;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:15px;padding:14px 16px;cursor:pointer;transition:.25s}.choice button:hover{border-color:var(--cyan);transform:translateX(4px)}.choice button.correct{border-color:var(--green);background:rgba(94,230,168,.12)}.choice button.wrong{border-color:var(--red);background:rgba(255,84,112,.1)}
+.feedback{min-height:25px;margin-top:12px;color:var(--muted);font-size:13px}
+
+.emergency{display:grid;grid-template-columns:1fr 1fr;gap:25px}
+.number{font-size:clamp(55px,8vw,100px);font-weight:900;letter-spacing:-.06em}
+.call{margin-top:16px;color:var(--muted);font-size:14px}
+.final{text-align:center}
+.final .shield{width:100px;height:100px;border-radius:32px;margin:0 auto 24px;display:grid;place-items:center;font-size:47px;background:linear-gradient(135deg,#1de0ae,#237bff);box-shadow:0 25px 70px rgba(35,123,255,.25)}
+.final h1{font-size:clamp(48px,8vw,96px)}
+.final p{max-width:750px;margin:auto}
+.cta{margin-top:28px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.pill{padding:11px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.045);font-size:13px;font-weight:750;color:#dce8f7}
+
+.nav{position:fixed;z-index:40;bottom:24px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:9px;padding:8px;border-radius:999px;background:rgba(4,11,20,.75);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(15px)}
+.nav button{width:42px;height:42px;border:0;border-radius:50%;color:#dbe9f9;background:rgba(255,255,255,.06);cursor:pointer;font-size:18px;transition:.2s}.nav button:hover{background:rgba(57,216,255,.15);transform:scale(1.05)}
+.dots{display:flex;gap:6px;padding:0 5px}.dotNav{width:7px;height:7px;border-radius:50%;background:#536276;transition:.3s}.dotNav.active{width:23px;border-radius:8px;background:var(--cyan);box-shadow:0 0 12px rgba(57,216,255,.55)}
+.hint{position:fixed;right:28px;bottom:30px;color:#71839a;font-size:11px}
+.badge{display:inline-block;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:800;background:rgba(255,215,106,.1);color:var(--yellow);border:1px solid rgba(255,215,106,.18);margin-bottom:12px}
+
+@media(max-width:800px){
+ .topbar{padding:0 16px;height:55px}.brand{font-size:10px}.brandMark{width:29px;height:29px}
+ .slide{padding:72px 22px 82px;overflow:auto;align-items:start}.content{padding:15px 0}
+ .hero,.warning,.emergency,.scenario{grid-template-columns:1fr}.heroVisual{display:none}
+ .grid,.statRow{grid-template-columns:1fr}.path{grid-template-columns:1fr 1fr}.arrow{display:none}
+ .card{padding:19px}.hint{display:none}.nav{bottom:12px}
+ h1{font-size:clamp(42px,14vw,70px)}h2{font-size:clamp(32px,10vw,52px)}
+}
+</style>
+</head>
+<body>
+<div id="bg"><div class="blob b1"></div><div class="blob b2"></div><div id="stars"></div></div>
+<div id="app">
+<div class="progress" id="progress"></div>
+<header class="topbar">
+  <div class="brand"><div class="brandMark"><span>🛡</span></div> PHÒNG, CHỐNG MA TÚY TRONG HỌC ĐƯỜNG</div>
+  <div class="counter" id="counter">01 / 16</div>
+</header>
+
+<main class="slides" id="slides">
+
+<section class="slide active">
+<div class="content hero">
+ <div class="heroText">
+  <div class="kicker"><i></i> Chuyên đề dành cho học sinh</div>
+  <h1><span class="gradient">ĐỪNG THỬ.</span><br><span class="red">ĐỪNG ĐỂ</span><br>MA TÚY CHỌN TƯƠNG LAI.</h1>
+  <p class="lead">Ma túy có thể không bắt đầu bằng một cuộc đời tan vỡ. Nó có thể bắt đầu bằng một lời rủ rê rất nhỏ: <b>“Thử một lần thôi.”</b></p>
+  <div class="quote">Tuổi trẻ có rất nhiều thứ để thử: một môn thể thao, một kỹ năng, một ước mơ. <b>Ma túy không nằm trong số đó.</b></div>
+ </div>
+ <div class="heroVisual"><div class="ring"><div class="orbit"></div><div class="core"><span>☠</span></div></div></div>
+</div>
+</section>
+
+<section class="slide">
+<div class="content">
+ <div class="kicker"><i></i> Mở đầu</div>
+ <h2>Tại sao học sinh cần <span class="gradient">biết về ma túy?</span></h2>
+ <p>Phòng ngừa hiệu quả không bắt đầu khi một người đã nghiện. Nó bắt đầu từ lúc mỗi học sinh biết nhận diện nguy cơ, biết từ chối và biết tìm kiếm sự giúp đỡ.</p>
+ <div class="grid">
+  <div class="card"><div class="icon">🎯</div><h3>Tò mò</h3><p>Tuổi mới lớn thường muốn khám phá. Tò mò là bình thường, nhưng thử một chất không rõ nguồn gốc có thể tạo ra rủi ro mà bạn không lường trước.</p></div>
+  <div class="card"><div class="icon">👥</div><h3>Áp lực bạn bè</h3><p>Nỗi sợ bị chê là “nhát”, “không hòa đồng” hoặc muốn chứng tỏ bản thân có thể khiến một người đưa ra quyết định trái với mong muốn của mình.</p></div>
+  <div class="card"><div class="icon">📱</div><h3>Mạng xã hội</h3><p>Nội dung trên mạng có thể bình thường hóa hành vi nguy hiểm, quảng cáo trá hình hoặc đưa ra những lời mời gọi được ngụy trang dưới nhiều hình thức.</p></div>
+ </div>
+ <div class="quote">Điều cần nhớ: <b>không phải thứ gì được gọi là “kẹo”, “nước”, “thuốc”, “pod”, “đồ vui” hay “hàng mới” cũng an toàn.</b></div>
+</div>
+</section>
+
+<section class="slide">
+<div class="content">
+ <div class="kicker"><i></i> Hiểu đúng</div>
+ <h2>Ma túy là gì và vì sao <span class="red">nguy hiểm?</span></h2>
+ <p>Ma túy là các chất có khả năng tác động lên hệ thần kinh, gây thay đổi cảm giác, nhận thức, tâm trạng hoặc hành vi; nhiều chất có thể gây lệ thuộc và gây hại nghiêm trọng.</p>
+ <div class="grid">
+  <div class="card"><div class="icon">🧠</div><h3>Tác động lên não</h3><p>Có thể làm thay đổi hệ thống tưởng thưởng, khả năng kiểm soát xung động, trí nhớ, sự tập trung và khả năng phán đoán.</p></div>
+  <div class="card"><div class="icon">💓</div><h3>Tác động cơ thể</h3><p>Tùy loại chất và cách sử dụng, nguy cơ có thể liên quan đến tim mạch, hô hấp, thần kinh và nhiều cơ quan khác.</p></div>
+  <div class="card"><div class="icon">🔁</div><h3>Lệ thuộc</h3><p>“Tôi kiểm soát được” không phải lúc nào cũng đúng. Khi đã hình thành lệ thuộc, việc dừng lại có thể trở nên rất khó khăn và cần hỗ trợ chuyên môn.</p></div>
+ </div>
+</div>
+</section>
+
+<section class="slide">
+<div class="content">
+ <div class="kicker"><i></i> Nhận biết để tránh xa</div>
+ <h2>Các dạng ma túy có thể <span class="red">trông rất khác nhau.</span></h2>
+ <p>Không thể xác định chính xác một chất chỉ bằng màu sắc hay hình dáng. Tuy nhiên, học sinh có thể nhận biết <b>dấu hiệu bên ngoài để cảnh giác</b> và tuyệt đối không thử, không nếm, không ngửi hoặc tự kiểm tra.</p>
+ <div class="grid">
+  <div class="card typeCard infoFloat"><div class="icon">🧊</div><h3>Ma túy dạng tinh thể/bột</h3><p>Có thể xuất hiện dưới dạng tinh thể hoặc bột với màu sắc khác nhau. Một số chất thường được gọi bằng tên lóng như “đá”.</p><span class="miniTag">Tinh thể</span><span class="miniTag">Bột</span><span class="miniTag">Không thử</span></div>
+  <div class="card typeCard infoFloat"><div class="icon">💊</div><h3>Dạng viên/nén</h3><p>Có thể là viên nén với nhiều màu, hình dạng, ký hiệu. Hình thức giống thuốc hoặc kẹo <b>không chứng minh đó là sản phẩm an toàn</b>.</p><span class="miniTag">Viên nén</span><span class="miniTag">Màu sắc đa dạng</span></div>
+  <div class="card typeCard infoFloat"><div class="icon">🌿</div><h3>Dạng thảo mộc/lá khô</h3><p>Một số chất có thể được ngụy trang dưới dạng thực vật hoặc hỗn hợp lá khô. “Cây cỏ” không đồng nghĩa với vô hại.</p><span class="miniTag">Lá khô</span><span class="miniTag">Hỗn hợp</span></div>
+  <div class="card typeCard infoFloat"><div class="icon">💧</div><h3>Dạng dung dịch</h3><p>Có thể là chất lỏng được chứa trong chai, lọ, ống hoặc bao bì khác. Không uống thử chất lỏng không rõ nguồn gốc.</p><span class="miniTag">Chất lỏng</span><span class="miniTag">Bao bì lạ</span></div>
+  <div class="card typeCard infoFloat"><div class="icon">🚬</div><h3>Dạng hút/vape</h3><p>Một số chất có thể được pha trộn hoặc đưa vào thiết bị hút. Không phải mọi loại vape hay tinh dầu đều chứa ma túy, nhưng sản phẩm không rõ nguồn gốc vẫn có rủi ro.</p><span class="miniTag">Thiết bị hút</span><span class="miniTag">Tinh dầu lạ</span></div>
+  <div class="card typeCard infoFloat"><div class="icon">🍬</div><h3>Ngụy trang như đồ ăn</h3><p>Có thể được đóng gói, tạo hình hoặc giới thiệu giống bánh, kẹo, nước uống. Đặc biệt cảnh giác với đồ không rõ nguồn gốc được mời dùng.</p><span class="miniTag">Kẹo/bánh</span><span class="miniTag">Đồ uống</span></div>
+ </div>
+ <div class="quote"><b>Điều quan trọng nhất:</b> Không cần phải xác định đó là loại ma túy nào mới được quyền từ chối. <b>Không rõ nguồn gốc = không sử dụng.</b></div>
+</div>
+</section>
+
+<section class="slide">
+<div class="content">
+ <div class="kicker"><i></i> Quy tắc nhận biết an toàn</div>
+ <h2>Nhìn thấy ≠ <span class="yellow">xác định được.</span></h2>
+ <div class="grid">
+  <div class="card"><div class="icon">👀</div><h3>Nhìn bằng mắt</h3><p>Màu, dạng viên, dạng bột, mùi hay bao bì chỉ là dấu hiệu bề ngoài. Chúng không đủ để kết luận thành phần của một chất.</p></div>
+  <div class="card"><div class="icon">🧪</div><h3>Muốn xác định phải kiểm nghiệm</h3><p>Việc xác định thành phần của chất nghi là ma túy cần phương pháp chuyên môn và cơ quan có thẩm quyền; học sinh không nên tự kiểm tra.</p></div>
+  <div class="card"><div class="icon">🛑</div><h3>Phản ứng an toàn</h3><p>Không nếm, không ngửi, không hút, không pha, không đưa người khác thử. Rời khỏi tình huống và báo người đáng tin cậy.</p></div>
+ </div>
+ <div class="quote">Đừng biến mình thành “người kiểm nghiệm”. <b>Khi nghi ngờ, ưu tiên tránh xa và báo người có trách nhiệm.</b></div>
+</div>
+</section>
+
+<section class="slide">
+<div class="content">
+ <div class="kicker"><i></i> Những điều dễ bị hiểu sai</div>
+ <h2><span class="yellow">4 câu nói</span> nghe quen nhưng rất nguy hiểm</h2>
+ <div class="grid">
+  <div class="card"><div class="icon">❌</div><h3>“Thử một lần không sao.”</h3><p>Không có cách nào bảo đảm một chất không rõ nguồn gốc là an toàn chỉ vì bạn dự định sử dụng một lần.</p></div>
+  <div class="card"><div class="icon">❌</div><h3>“Tự nhiên thì không độc.”</h3><p>Nguồn gốc “tự nhiên” không đồng nghĩa với vô hại. Điều quan trọng là thành phần và tác động thực tế của chất đó.</p></div>
+  <div class="card"><div class="icon">❌</div><h3>“Bạn thân đưa thì chắc an toàn.”</h3><p>Người đưa cho bạn có thể cũng không biết chính xác thành phần. Đừng đánh đổi an toàn để giữ một mối quan hệ.</p></div>
+  <div class="card"><div class="icon">❌</div><h3>“Không ai biết đâu.”</h3><p>Yêu cầu giữ bí mật là dấu hiệu cần cảnh giác, không phải lý do để bạn tiếp tục.</p></div>
+ </div>
+</div>
+</section>
+
+<section class="slide">
+<div class="content">
+ <div class="kicker"><i></i> Nhận diện nguy cơ</div>
+ <h2>Cái bẫy thường được <span class="red">ngụy trang</span> như thế nào?</h2>
+ <div class="statRow">
+  <div class="stat"><div class="bigNumber">01</div><strong>Đồ ăn, đồ uống</strong><small>Mời thử sản phẩm không rõ nguồn gốc, không rõ thành phần hoặc được yêu cầu “đừng hỏi nhiều”.</small></div>
+  <div class="stat"><div class="bigNumber">02</div><strong>Thuốc & sản phẩm lạ</strong><small>Được giới thiệu bằng những lời hứa như “tăng vui”, “giảm stress”, “thư giãn”, “thức khuya không mệt”.</small></div>
+  <div class="stat"><div class="bigNumber">03</div><strong>Rủ rê qua mạng</strong><small>Nhóm kín, tài khoản ẩn danh, lời mời gặp mặt hoặc nhận đồ từ người chưa biết rõ danh tính.</small></div>
+ </div>
+ <div class="quote"><b>Nguyên tắc 3 KHÔNG:</b> Không nhận đồ không rõ nguồn gốc • Không thử chất không biết rõ • Không đi theo lời rủ rê đáng ngờ.</div>
+</div>
+</section>
+
+<section class="slide">
+<div class="content">
+ <div class="kicker"><i></i> Dấu hiệu cảnh báo</div>
+ <h2>Nhận diện những <span class="yellow">“tín hiệu đỏ”.</span></h2>
+ <div class="warning">
+  <div class="warningBox"><div class="emoji">🚨</div><h3>Đừng chờ đến khi hậu quả xảy ra.</h3><p>Một tình huống đáng ngờ nên được xử lý sớm. Nếu bạn thấy mình hoặc bạn bè gặp nguy cơ, hãy tìm người lớn đáng tin cậy.</p></div>
+  <div class="list">
+   <div class="item"><div class="dot"></div><div><strong>Được rủ đến nơi kín đáo</strong><span>“Đi chỗ này với bọn mình, không ai biết đâu.”</span></div></div>
+   <div class="item"><div class="dot"></div><div><strong>Được đưa chất hoặc sản phẩm không rõ nguồn gốc</strong><span>Không nhận, không nếm thử, không sử dụng.</span></div></div>
+   <div class="item"><div class="dot"></div><div><strong>Bị yêu cầu giữ bí mật</strong><span>“Đừng kể với bố mẹ, thầy cô.” Đây là lý do để bạn cảnh giác hơn.</span></div></div>
+   <div class="item"><div class="dot"></div><div><strong>Bị ép, đe dọa hoặc thao túng</strong><span>Không ai có quyền ép bạn sử dụng bất kỳ chất nào.</span></div></div>
+  </div>
+ </div>
+</div>
+</section>
+
+<section class="slide">
+<div class="content">
+ <div class="kicker"><i></i> Kỹ năng từ chối</div>
+ <h2>Không cần giải thích dài.<br><span class="gradient">Hãy nói “KHÔNG”.</span></h2>
+ <div class="path">
+  <div class="step"><b>1</b><strong>Nói rõ</strong><p>“Không. Mình không dùng.”</p><span class="arrow">›</span></div>
+  <div class="step"><b>2</b><strong>Rời khỏi</strong><p>Đi khỏi nơi đó, không tranh luận.</p><span class="arrow">›</span></div>
+  <div class="step"><b>3</b><strong>Đi cùng bạn</strong><p>Tìm người bạn tin tưởng, đừng ở một mình.</p><span class="arrow">›</span></div>
+  <div class="step"><b>4</b><strong>Báo người lớn</strong><p>Cha mẹ, thầy cô, nhà trường hoặc người có trách nhiệm.</p><span class="arrow">›</span></div>
+  <div class="step"><b>5</b><strong>Giữ bằng chứng</strong><p>Nếu an toàn, lưu tin nhắn/hình ảnh để hỗ trợ xử lý.</p></div>
+ </div>
+ <div class="quote"><b>Rời đi không phải hèn.</b> Tự bảo vệ mình mới là bản lĩnh.</div>
+</div>
+</section>
+
+<section class="slide">
+<div class="content">
+ <div class="kicker"><i></i> Tình huống 01</div>
+ <h2>Bạn thân rủ thử. <span class="gradient">Bạn làm gì?</span></h2>
+ <div class="scenario">
+  <div class="chat">
+   <div class="badge">TÌNH HUỐNG</div>
+   <div class="msg friend">“Này, thử cái này đi. Chỉ một chút thôi.”</div>
+   <div class="msg friend">“Không thử thì mất vui. Tụi mình đều làm mà.”</div>
+   <div class="msg you">Bạn sẽ phản ứng thế nào?</div>
+  </div>
+  <div class="chat">
+   <h3>Chọn cách xử lý</h3>
+   <div class="choice">
+    <button onclick="answer(this,false)">A. Thử một chút để không bị coi là nhát.</button>
+    <button onclick="answer(this,true)">B. Từ chối, rời khỏi tình huống và báo người đáng tin cậy nếu cần.</button>
+    <button onclick="answer(this,false)">C. Nhận nhưng giữ lại, hôm sau mới quyết định.</button>
+   </div>
+   <div class="feedback" id="feedback"></div>
+  </div>
+ </div>
+</div>
+</section>
+
+<section class="slide">
+<div class="content">
+ <div class="kicker"><i></i> Tình huống 02</div>
+ <h2>Một món quà <span class="yellow">không rõ nguồn gốc.</span></h2>
+ <div class="grid">
+  <div class="card"><div class="icon">🎁</div><h3>“Cho cậu này, ngon lắm!”</h3><p>Một người quen trên mạng gửi đồ ăn, kẹo hoặc đồ uống lạ và bảo bạn dùng thử. Bao bì không rõ nguồn gốc.</p></div>
+  <div class="card"><div class="icon">🔍</div><h3>Đừng tự kiểm nghiệm</h3><p>Không nếm thử để “xem có sao không”, không đưa cho người khác thử và không chia sẻ lại.</p></div>
+  <div class="card"><div class="icon">📢</div><h3>Hãy báo người lớn</h3><p>Trao đổi với cha mẹ, thầy cô hoặc người có trách nhiệm; nếu có dấu hiệu nguy hiểm, liên hệ lực lượng chức năng.</p></div>
+ </div>
+ <div class="quote">Một sản phẩm có vẻ bắt mắt không chứng minh được thành phần bên trong. <b>An toàn bắt đầu từ việc không sử dụng thứ mình không biết rõ.</b></div>
+</div>
+</section>
+
+<section class="slide">
+<div class="content">
+ <div class="kicker"><i></i> Mạng xã hội & môi trường số</div>
+ <h2>Đừng để <span class="gradient">một tin nhắn</span> dẫn bạn đến nguy hiểm.</h2>
+ <div class="grid">
+  <div class="card"><div class="icon">👤</div><h3>Người lạ trên mạng</h3><p>Không gặp riêng người chỉ quen qua mạng khi chưa xác minh và chưa có người lớn biết. Đặc biệt cảnh giác với lời mời nhận quà, đi chơi hoặc kiếm tiền.</p></div>
+  <div class="card"><div class="icon">🔗</div><h3>Link & nhóm kín</h3><p>Không truy cập, chia sẻ hoặc tham gia các nhóm có nội dung mua bán, sử dụng chất cấm hoặc hướng dẫn hành vi nguy hiểm.</p></div>
+  <div class="card"><div class="icon">📸</div><h3>Lưu thông tin khi cần</h3><p>Nếu gặp lời rủ rê đáng ngờ, hãy lưu lại tài khoản, tin nhắn, thời gian và nội dung liên quan nếu việc này an toàn.</p></div>
+ </div>
+ <div class="quote"><b>Đừng tự xử lý một mình.</b> Chặn tài khoản nếu cần và nói với người lớn đáng tin cậy.</div>
+</div>
+</section>
+
+<section class="slide">
+<div class="content">
+ <div class="kicker"><i></i> Pháp luật & trách nhiệm</div>
+ <h2>“Không dùng” chưa đủ — hãy <span class="red">không tiếp tay.</span></h2>
+ <p>Pháp luật Việt Nam nghiêm cấm nhiều hành vi liên quan đến ma túy. Học sinh cần tránh xa việc tàng trữ, mua bán, vận chuyển, tổ chức hoặc lôi kéo người khác sử dụng trái phép chất ma túy.</p>
+ <div class="grid">
+  <div class="card"><div class="icon">🚫</div><h3>Không nhận giữ hộ</h3><p>Đừng nhận cầm, cất hoặc vận chuyển đồ vật mà bạn không biết rõ, đặc biệt khi được yêu cầu giữ bí mật hoặc trả tiền công.</p></div>
+  <div class="card"><div class="icon">🤝</div><h3>Không rủ rê bạn bè</h3><p>Đừng vì tò mò, tiền bạc hoặc muốn “chơi cho biết” mà kéo người khác vào hành vi nguy hiểm.</p></div>
+  <div class="card"><div class="icon">📣</div><h3>Biết báo tin</h3><p>Khi phát hiện dấu hiệu đáng ngờ, hãy thông tin cho người có trách nhiệm thay vì tự đối đầu hoặc tự điều tra.</p></div>
+ </div>
+ <div class="quote">Hậu quả pháp lý phụ thuộc vào hành vi, chất, tình tiết và quy định pháp luật áp dụng. Khi có vụ việc cụ thể, cần được cơ quan có thẩm quyền hướng dẫn.</div>
+</div>
+</section>
+
+<section class="slide">
+<div class="content">
+ <div class="kicker"><i></i> Xây dựng môi trường học đường an toàn</div>
+ <h2>Mỗi học sinh đều có thể là <span class="green">một “lá chắn”.</span></h2>
+ <div class="grid">
+  <div class="card"><div class="icon">🏫</div><h3>Trong nhà trường</h3><p>Chấp hành nội quy, chủ động tham gia hoạt động tuyên truyền, thể thao, văn hóa; báo ngay cho giáo viên khi phát hiện nguy cơ.</p></div>
+  <div class="card"><div class="icon">👨‍👩‍👧</div><h3>Trong gia đình</h3><p>Chia sẻ với cha mẹ hoặc người thân khi gặp áp lực, bị đe dọa, bị rủ rê hoặc chứng kiến hành vi bất thường.</p></div>
+  <div class="card"><div class="icon">🫂</div><h3>Trong nhóm bạn</h3><p>Đừng cười nhạo người nói “không”. Một người bạn tốt là người tôn trọng ranh giới và giúp bạn tránh xa nguy hiểm.</p></div>
+ </div>
+ <div class="quote">Thông điệp dành cho mỗi học sinh: <b>Thấy nguy cơ — nói ra. Thấy bạn gặp khó — giúp bạn. Thấy hành vi vi phạm — báo người có trách nhiệm.</b></div>
+</div>
+</section>
+
+<section class="slide">
+<div class="content">
+ <div class="kicker"><i></i> Nếu bạn hoặc bạn bè đã lỡ sử dụng</div>
+ <h2>Đừng xấu hổ. <span class="gradient">Hãy tìm trợ giúp.</span></h2>
+ <div class="warning">
+  <div class="warningBox"><div class="emoji">🫶</div><h3>Nói thật để được bảo vệ.</h3><p>Không tự che giấu nếu bạn cảm thấy không an toàn hoặc có dấu hiệu bất thường sau khi sử dụng một chất lạ.</p></div>
+  <div class="list">
+   <div class="item"><div class="dot"></div><div><strong>Ngừng sử dụng thêm</strong><span>Không tiếp tục dùng để “đỡ khó chịu” và không dùng thêm chất khác để tự xử lý.</span></div></div>
+   <div class="item"><div class="dot"></div><div><strong>Báo ngay người lớn đáng tin cậy</strong><span>Cha mẹ, giáo viên, cán bộ y tế hoặc người có trách nhiệm.</span></div></div>
+   <div class="item"><div class="dot"></div><div><strong>Nếu có triệu chứng nghiêm trọng</strong><span>Gọi cấp cứu và tìm trợ giúp y tế khẩn cấp; không để người có biểu hiện nguy hiểm ở một mình.</span></div></div>
+   <div class="item"><div class="dot"></div><div><strong>Không tự chẩn đoán</strong><span>Chất không rõ nguồn gốc có thể có thành phần khác với lời quảng cáo hoặc lời người bán nói.</span></div></div>
+  </div>
+ </div>
+</div>
+</section>
+
+<section class="slide">
+<div class="content">
+ <div class="kicker"><i></i> Khi cần hỗ trợ khẩn cấp</div>
+ <h2>Biết gọi đúng nơi, <span class="yellow">đúng lúc.</span></h2>
+ <div class="emergency" style="margin-top:30px">
+  <div class="card"><div class="number gradient">113</div><h3>Công an</h3><p>Liên hệ khi có nguy cơ về an ninh, trật tự, bị đe dọa, cưỡng ép hoặc cần lực lượng công an hỗ trợ.</p><div class="call">Khi gọi, nói ngắn gọn: ở đâu • chuyện gì xảy ra • ai đang gặp nguy hiểm.</div></div>
+  <div class="card"><div class="number green">111</div><h3>Tổng đài quốc gia bảo vệ trẻ em</h3><p>Hỗ trợ, tư vấn và tiếp nhận thông tin liên quan đến trẻ em. Có thể tìm đến người lớn đáng tin cậy trong gia đình và nhà trường.</p><div class="call">Miễn phí — 24/7.</div></div>
+ </div>
+ <div class="grid" style="margin-top:16px">
+  <div class="card"><div class="icon">🚑</div><h3>115 — Cấp cứu</h3><p>Khi có tình trạng y tế khẩn cấp, hãy gọi cấp cứu và làm theo hướng dẫn của nhân viên y tế.</p></div>
+  <div class="card"><div class="icon">🏥</div><h3>Cơ sở y tế</h3><p>Nhờ cha mẹ, giáo viên hoặc người lớn đưa đi khám khi có triệu chứng bất thường hoặc nghi ngờ phơi nhiễm chất độc hại.</p></div>
+  <div class="card"><div class="icon">👨‍🏫</div><h3>Thầy cô & nhà trường</h3><p>Đây là những người đầu tiên bạn có thể tìm đến khi bị rủ rê, đe dọa hoặc lo lắng về một người bạn.</p></div>
+ </div>
+</div>
+</section>
+
+<section class="slide">
+<div class="content">
+ <div class="kicker"><i></i> Thử thách 10 giây</div>
+ <h2>Nếu gặp lời rủ rê, hãy nhớ <span class="gradient">5 từ khóa.</span></h2>
+ <div class="path">
+  <div class="step"><b>1</b><strong>KHÔNG</strong><p>Nói rõ ràng, dứt khoát.</p><span class="arrow">›</span></div>
+  <div class="step"><b>2</b><strong>RỜI</strong><p>Ra khỏi nơi không an toàn.</p><span class="arrow">›</span></div>
+  <div class="step"><b>3</b><strong>GỌI</strong><p>Tìm người đáng tin cậy.</p><span class="arrow">›</span></div>
+  <div class="step"><b>4</b><strong>BÁO</strong><p>Thông tin cho người có trách nhiệm.</p><span class="arrow">›</span></div>
+  <div class="step"><b>5</b><strong>BẢO VỆ</strong><p>Bản thân, bạn bè và tương lai.</p></div>
+ </div>
+ <div class="quote" style="font-size:20px">Bạn không cần phải chứng minh mình “gan”. <b>Biết nói KHÔNG đúng lúc mới là bản lĩnh.</b></div>
+</div>
+</section>
+
+<section class="slide">
+<div class="content final">
+ <div class="shield">🛡️</div>
+ <div class="kicker">Thông điệp cuối</div>
+ <h1><span class="gradient">TƯƠNG LAI</span><br>LÀ CỦA BẠN.</h1>
+ <p>Đừng để một phút tò mò quyết định những năm tháng phía trước. Hãy chọn bạn tốt, môi trường lành mạnh, thể thao, học tập và những mục tiêu khiến bạn tự hào.</p>
+ <div class="cta">
+  <div class="pill">🚫 Không thử</div><div class="pill">🗣️ Dám nói KHÔNG</div><div class="pill">🤝 Biết tìm người hỗ trợ</div><div class="pill">🌱 Bảo vệ tương lai</div>
+ </div>
+ <div class="quote" style="max-width:760px;margin:30px auto 0;text-align:left">“Tuổi trẻ không cần chứng minh bằng những điều nguy hiểm. Hãy để người khác nhớ về bạn bởi những điều bạn đã học, những người bạn đã giúp và những ước mơ bạn đã theo đuổi.”</div>
+</div>
+</section>
+
+</main>
+
+<div class="nav">
+ <button onclick="prev()" aria-label="Trang trước">‹</button>
+ <div class="dots" id="dots"></div>
+ <button onclick="next()" aria-label="Trang sau">›</button>
+</div>
+<div class="hint">← → / SPACE để chuyển trang • F để toàn màn hình</div>
+</div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+const dots=document.getElementById('dots');
+const counter=document.getElementById('counter');
+const progress=document.getElementById('progress');
+let current=0;
+
+slides.forEach((_,i)=>{
+ const d=document.createElement('span'); d.className='dotNav'+(i===0?' active':'');
+ d.onclick=()=>go(i); dots.appendChild(d);
+});
+function go(i){
+ current=(i+slides.length)%slides.length;
+ slides.forEach((s,n)=>s.classList.toggle('active',n===current));
+ [...dots.children].forEach((d,n)=>d.classList.toggle('active',n===current));
+ counter.textContent=String(current+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+ progress.style.width=((current+1)/slides.length*100)+'%';
+}
+function next(){go(current+1)} function prev(){go(current-1)}
+function answer(btn,ok){
+ document.querySelectorAll('.choice button').forEach(b=>b.classList.remove('correct','wrong'));
+ btn.classList.add(ok?'correct':'wrong');
+ document.getElementById('feedback').textContent=ok
+ ? '✓ Chính xác. Từ chối – rời khỏi – báo người đáng tin cậy là cách xử lý an toàn.'
+ : '✕ Chưa an toàn. Khi không biết rõ chất mình được đưa cho, đừng nhận hoặc sử dụng.';
+ document.getElementById('feedback').style.color=ok?'var(--green)':'var(--red)';
+}
+document.addEventListener('keydown',e=>{
+ if(['ArrowRight',' ','PageDown'].includes(e.key)){e.preventDefault();next()}
+ if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();prev()}
+ if(e.key.toLowerCase()==='f'){
+   if(!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+   else document.exitFullscreen?.();
+ }
+ if(e.key==='Home') go(0);
+ if(e.key==='End') go(slides.length-1);
+});
+let sx=0;
+document.addEventListener('touchstart',e=>sx=e.changedTouches[0].screenX,{passive:true});
+document.addEventListener('touchend',e=>{
+ const dx=e.changedTouches[0].screenX-sx;
+ if(Math.abs(dx)>55) dx<0?next():prev();
+},{passive:true});
+
+const stars=document.getElementById('stars');
+for(let i=0;i<70;i++){
+ const s=document.createElement('i'); s.className='star';
+ s.style.left=Math.random()*100+'%'; s.style.top=Math.random()*100+'%';
+ s.style.opacity=.15+Math.random()*.6; s.style.animationDelay=(-Math.random()*3)+'s';
+ stars.appendChild(s);
+}
+go(0);
+</script>
+</body>
+</html>
